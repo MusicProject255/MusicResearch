@@ -4,9 +4,11 @@ author: Collin Smith, Conor Burrows, Jake Luedtke, Nicholas Melon
 date: "January 25, 2017"
 output: html_document
 ---
+#Overview
+  
+In our group our main focus is to determine what genre is the most popular in each decade starting with 1900 and going up to 2016. We also are going to look at which genres are more popular in eruope compared to the U.S and if the words in a song title have a effect on how popular a song is. We are going to use music brainz to get the genre of a song, it's mood quality, and tempo. With this information we will be able to see the trends better in preffered music choice for each decade. In the end we may use the database to make a simple song finder based on your taste in genre, tempo, and mood.
 
-
-## First Steps
+## First Steps: Getting data and Doing stuff
 
 ```{r}
 library(stringr)
@@ -33,25 +35,15 @@ for (x in 1:length(lsong)){
     }else{
       words[[word]] <- 1
     }
-    
   }
 }
 
-saveRDS(words, "words.txt")
-#Formatting Data
+#Formatting Data and saving
 mdf <- as.data.frame(words)
 gmdf <- t(mdf)
-nad <- c("Instances")
-colnames(gmdf) <- nad
+colnames(gmdf) <- c("Instances")
+write.table(gmdf, file = "songvalues.csv")
+
 #Function to 
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
