@@ -47,3 +47,36 @@ write.table(gmdf, file = "songvalues.csv")
 #Function to 
 ```
 
+## Various Data Cleaning, Adding Decade Group Variable
+
+```{r}
+# Read the updated CSV
+chart <- read.csv("chart.csv")
+
+# Cleaning year--replace unknowns with NAs, convert to numeric
+chart$year[which(as.character(chart$year) == "unknown")] <- NA
+chart$year <- as.numeric(as.character(chart$year))
+
+# Get decade from year
+findDecade <- function(year) {
+  after1900 <- year-1900
+  if (is.na(year)) {
+    decade <- NA # Account for NAs
+  } else if (after1900 >= 100) {
+    decade <- 2000 # Assign 2000 to anything 21st century
+  } else {
+    tens <- after1900 %/% 10
+    decade <- 1900 + 10*tens
+  }
+  return(decade)
+}
+
+decades <- unlist(lapply(chart$year, findDecade))
+chart$decade <- decades
+
+# update csv
+write.csv(chart, "chart.csv")
+
+
+```
+
