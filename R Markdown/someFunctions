@@ -28,3 +28,20 @@ getWordScore <- function(word) {
   wordScore <- mean(songChart$score[wordInd])
   return(wordScore)
 }
+
+# Take numeric vector, spit out z-scores
+zscores <- function(numData) {
+  m <- mean(numData, na.rm = TRUE)
+  sd <- sd(numData, na.rm = TRUE)
+  z <- (numData - m)/sd
+  return(z)
+}
+
+# Add z-scores for top5000
+top5000$z_usa <- zscores(top5000$raw_usa)
+top5000$z_eng <- zscores(top5000$raw_eng)
+top5000$z_eur <- zscores(top5000$raw_eur)
+top5000$z_row <- zscores(top5000$raw_row)
+
+
+
