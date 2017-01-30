@@ -1,0 +1,30 @@
+### Functions to get average scores of every song in the year,
+# how many times a word appears,
+# and average score of songs with a certain word in the title
+
+
+
+getYearScore <- function(year) {
+  scores <- chart$score[which(chart$year==year)]
+  yearScore <- mean(scores)
+  return(yearScore)
+}
+
+getWordCount <- function(word, artists = FALSE) {
+  if (artists) {
+    wordInd <- grep(word, songChart$artist, ignore.case=TRUE)
+  } else {
+    wordInd <- grep(word, songChart$name, ignore.case=TRUE)
+  }
+  return(length(wordInd))
+}
+
+getWordScore <- function(word) {
+  if (artists) {
+    wordInd <- grep(word, songChart$artist, ignore.case=TRUE)
+  } else {
+    wordInd <- grep(word, songChart$name, ignore.case=TRUE)
+  }
+  wordScore <- mean(songChart$score[wordInd])
+  return(wordScore)
+}
