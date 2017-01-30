@@ -14,26 +14,46 @@ In our group our main focus is to determine what genre is the most popular in ea
 library(stringr)
 #Get dataset and look at name and title
 allsongs <- read.csv("tsort-chart-2-6-0013.csv")
-nsongs <- allsongs[,1:2]
+#nsongs <- allsongs[,1:2]
+rsongs <- allsongs[,1:3]
+justsongs<- rsongs[(rsongs$type=="song"),]
+justalbums <- rsongs[(rsongs$type=="album"),]
 #Set as characters
-nnsongs <- as.character(nsongs$name)
+csongs <- as.character(justsongs$name)
+calbums <- as.character(justalbums$name)
 #Make sure song names are in correct format
-lsongs <- tolower(nnsongs)
-lsong <- str_extract_all(lsongs, boundary("word"))
+csongs <- tolower(csongs)
+csongs <- str_extract_all(csongs, boundary("word"))
+calbums <- tolower(calbums)
+calbums <- str_extract_all(calbums, boundary("word"))
 
-#test <- head(lsong, n = 20)
+
 #Empty list for words
 words <- list()
 #Function looks at song titles, splits them up into words, adds them to a list and keeps track of number 
 dtf <- data.frame()
-for (x in 1:length(lsong)){
-  title <- lsong[[x]]
+for (x in 1:length(csongs)){
+  title <- csongs[[x]]
   for (y in 1:length(title)){
     word <- title[[y]]
     if(exists(word, words)){
       words[[word]] <- words[[word]] + 1
     }else{
       words[[word]] <- 1
+    }
+  }
+}
+worda <- list()
+#Function looks at song titles, splits them up into words, adds them to a list and keeps track of number 
+dtfa <- data.frame()
+for (x in 1:length(calbums)){
+  titlea <- calbums[[x]]
+  for (y in 1:length(titlea)){
+    worda <- title[[y]]
+    if(exists(aword, worda)){
+      worda[[aword]] <- worda[[aword]] + 1
+    }else{
+      worda[[aword]] <- 1
     }
   }
 }
@@ -44,7 +64,10 @@ gmdf <- t(mdf)
 colnames(gmdf) <- c("Instances")
 write.table(gmdf, file = "songvalues.csv")
 
-#Function to 
+mdfa <- as.data.frame(worda)
+gmdfa <- t(mdfa)
+colnames(gmdfa) <- c("Instances")
+write.table(gmdfa, file = "albumvalues.csv")
 ```
 
 ## Various Data Cleaning, Adding Decade Group Variable
