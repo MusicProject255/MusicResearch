@@ -146,7 +146,22 @@ for(x in 1:length(datsq)){
   nob[[x]] <- gsub("\\{|\\}", "", datsq[[x]])
 }
 nextes <- nob[[1]]
+
 ```
+
+##Formating metadata
+```{r}
+top5meta <- read.csv("top5000plus.csv")
+top5meta[,1:2] <- NULL
+colnames(top5meta) <- 
+c("artist" ,"name", "year","finalscore","rawusa","raweng","raweur","rawrow","zusa","zeng","zeur","zrow", "decade","mood1","mood2","artistera1","artistera2","tempo1","exacttempo","tempo2","artistorigin1","artistoriginspecific","artistorigin2","artistorigin4","genre1","genreSpec","genre2","artisttype1",
+"artisttype2")
+tmpochange <- top5meta$tempo1
+tmpochange <- gsub(" Tempo", "" ,tmpochange)
+top5meta$tempo1 <- tmpochange
+
+```
+
 
 ```{r}
 withzright  <- read.csv("top5000withz.csv")
@@ -155,24 +170,4 @@ values5000right <- read.csv("songvalues5000.csv")
 head(values5000right)
 corectv5right <- read.csv("5000popularitywords.csv")
 head(corectv5right)
-```
-
-##Code used to convert json of Gracenote data
-```{r eval=FALSE}
-library(jsonlite)
-library(dplyr)
-library(tidyr)
-
-json = fromJSON(paste("[",paste(readLines("https://raw.githubusercontent.com/MusicProject255/MusicResearch/master/Databases/meta.json"),
-                                collapse=","),"]"))
-
-gracenote <- data.frame(json)
-tbl_df(gracenote)
-# The data frame is not in a 'tidy' format. Several columns are actually nested data frames.
-# Use the flatten() function to fix this.
-gnTryThis <- flatten(gracenote)
-# The 'tracks' column is a list. We could fix this, or we could just take out the column.
-# We took the column out, because it's useless for our purposes.
-gnTryThis <- gnTryThis %>% select(-tracks)
-write.csv(gnTryThis, "gnMetadata5000.csv")
 ```
