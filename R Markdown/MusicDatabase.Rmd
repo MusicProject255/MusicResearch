@@ -162,7 +162,7 @@ top5meta$tempo1 <- tmpochange
 
 ```
 
-
+##View data
 ```{r}
 withzright  <- read.csv("top5000withz.csv")
 head(withzright)
