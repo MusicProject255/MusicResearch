@@ -101,8 +101,8 @@ chart$decade <- decades
 write.csv(chart, "chart.csv")
 ```
 ## GraceNote and Metadata Aggregation
-### Required Libraries:
-**PYGN:** https://github.com/cweichen/pygn
+### Required Libraries:  
+**PYGN:** https://github.com/cweichen/pygn  
 **TQDM:** https://pypi.python.org/pypi/tqdm
 
 Running GNAW, our unofficial GraceNote API Wrapper, requires you to authenticate via Pygn. If you have a GraceNote developer account, this can be done using your "clientID" from your application page and running pygn.register(clientID). Please note that Gracenote will throttle you by throwing exceptions if you attempt to collect data too many times. However, GNAW takes this into account and lets you run the program on the same file to generate a new output file with more complete data.
