@@ -150,24 +150,116 @@ nextes <- nob[[1]]
 ```
 
 ##Formating metadata
-```{r}
+```{r eval=FALSE}
+library(stringr)
+
 top5meta <- read.csv("top5000plus.csv")
 top5meta[,1:2] <- NULL
 colnames(top5meta) <- 
 c("artist" ,"name", "year","finalscore","rawusa","raweng","raweur","rawrow","zusa","zeng","zeur","zrow", "decade","mood1","mood2","artistera1","artistera2","tempo1","exacttempo","tempo2","artistorigin1","artistoriginspecific","artistorigin2","artistorigin4","genre1","genreSpec","genre2","artisttype1",
 "artisttype2")
-tmpochange <- top5meta$tempo1
-tmpochange <- gsub(" Tempo", "" ,tmpochange)
-top5meta$tempo1 <- tmpochange
+top5meta$tempo1 <- gsub(" Tempo", "" ,top5meta$tempo1)
+#Not splitting up mood 2 by / or " "
 
+#gets genre, mood, tempo, artist
+wordstat <- function(word){
+  wholewordinfo <<- data.frame()
+  formt <- str_extract_all(tolower(top5meta$name), boundary("word"))
+  wordloc <- grep(word, formt)
+  for(x in wordloc){
+    wholewordinfo[x,1] <<- word
+    wholewordinfo[x,2] <<- top5meta$genre1[x]
+    wholewordinfo[x,3] <<- top5meta$genreSpec[x]
+    wholewordinfo[x,4] <<- top5meta$genre2[x]
+    wholewordinfo[x,5] <<- top5meta$mood1[x]
+    wholewordinfo[x,6] <<- top5meta$mood2[x]
+    wholewordinfo[x,7] <<- top5meta$tempo1[x]
+    wholewordinfo[x,8] <<- top5meta$exacttempo[x]
+    wholewordinfo[x,9] <<- top5meta$tempo2[x]
+    wholewordinfo[x,10] <<- top5meta$artisttype1[x]
+    wholewordinfo[x,11] <<- top5meta$artistera1[x] 
+  }
+  
+}
+wordvalue <- data.frame() 
+wordstatr <- function(word){
+  wordinfo <- vector()
+  formt <- str_extract_all(tolower(top5meta$name), boundary("word"))
+  wordloc <- grep(word, formt)
+  for(x in wordloc){
+    wordinfo <- append(wordinfo, as.character(top5meta$mood1[x]))
+  
+  }
+  top <- names(which.max(table(wordinfo)))
+  #some have NA values
+  if(length(top) == 0){
+    wordvalue[(nrow(wordvalue)+1),1] <<- word
+    wordvalue[(nrow(wordvalue)),2] <<- NA
+
+  }
+  else{
+    wordvalue[(nrow(wordvalue)+1),1] <<- word
+    wordvalue[(nrow(wordvalue)),2] <<- top
+  }
+}
+
+#Get word stats
+wlist <- as.list(corectv5help[,1])
+wordlistv <- lapply(wlist, wordstatr)
+
+#backup <- wordv
+#wordv <- backup
+wordvalue <- backup
+#Get the rest of information
+getrest <- function(word,y){
+  #Make new column
+  wordinfo <- vector()
+  formt <- str_extract_all(tolower(top5meta$name), boundary("word"))
+  #Locate word
+  wordloc <- grep(word, formt)
+  #Iterate through locations and append data to list
+  for(x in wordloc){
+      wordinfo <- append(wordinfo, as.character(top5meta[[y]][x]))
+
+  }
+  wordvalue[,ncol(wordvalue)+1] <<- NA
+  #Gets the max of a table, and its element
+  top <- names(which.max(table(wordinfo)))
+  rplace <- grep("", wordvalue[,ncol(wordvalue)])
+  if(length(rplace) == 0 ){
+    rplace <- 1
+  }else{
+    rplace = rplace + 1
+  }
+  
+  #NAs
+  if(length(top) == 0){
+    #Grep finds how many elemnts are in the row, so it can index it properly
+    wordvalue[rplace,(ncol(wordvalue))] <<- NA
+
+  }
+  else{
+    wordvalue[rplace,(ncol(wordvalue))] <<- top
+  }
+}
+#getrest("christmas", 15)
+cat <- lapply(wlist, getrest, y = 15)
+dog <- t(wordvalue[, 3:3454])
+right <- dog[,1]
+#colnames(wholewordinfo) <<- c("genre1","genre2","genre3","mood1","mood2","tempo1","tempo2","temp3","artistype")
+write.table(top5meta, "formattedtop5meta.csv")
+write.table(wordvalue, "wordvalue.csv")
 ```
+##View of data
 
-##View data
 ```{r}
-withzright  <- read.csv("top5000withz.csv")
-head(withzright)
+wthzright  <- read.csv("top5000withz.csv")
+head(wthzright)
 values5000right <- read.csv("songvalues5000.csv")
 head(values5000right)
 corectv5right <- read.csv("5000popularitywords.csv")
 head(corectv5right)
+hereiswordv <- read.csv("wordvalue.csv")
+head(hereiswordv)
+
 ```
