@@ -162,6 +162,7 @@ top5meta$tempo1 <- gsub(" Tempo", "" ,top5meta$tempo1)
 #Not splitting up mood 2 by / or " "
 
 #gets genre, mood, tempo, artist
+#Not right
 wordstat <- function(word){
   wholewordinfo <<- data.frame()
   formt <- str_extract_all(tolower(top5meta$name), boundary("word"))
@@ -181,6 +182,7 @@ wordstat <- function(word){
   }
   
 }
+#Gets the first column, next function (kinda) does the rest
 wordvalue <- data.frame() 
 wordstatr <- function(word){
   wordinfo <- vector()
@@ -211,6 +213,7 @@ wordlistv <- lapply(wlist, wordstatr)
 #wordv <- backup
 wordvalue <- backup
 #Get the rest of information
+rplace <- 0
 getrest <- function(word,y){
   #Make new column
   wordinfo <- vector()
@@ -229,7 +232,8 @@ getrest <- function(word,y){
   if(length(rplace) == 0 ){
     rplace <- 1
   }else{
-    rplace = rplace + 1
+    rplace <-  rplace + 1
+    print(rplace)
   }
   
   #NAs
@@ -243,12 +247,24 @@ getrest <- function(word,y){
   }
 }
 #getrest("christmas", 15)
-cat <- lapply(wlist, getrest, y = 15)
-dog <- t(wordvalue[, 3:3454])
+#For this I manually put in the columns because the function didn't work as planed
+cat <- lapply(wlist, getrest, y = 29)
+#Put it as a dataframe to append to wordvalue
+temp <- as.data.frame(do.call("rbind", cat), stringsAsFactors = FALSE)
+backup[,14] <- temp
+#dog <- t(wordvalue[, 3:3454])
 right <- dog[,1]
-#colnames(wholewordinfo) <<- c("genre1","genre2","genre3","mood1","mood2","tempo1","tempo2","temp3","artistype")
-write.table(top5meta, "formattedtop5meta.csv")
-write.table(wordvalue, "wordvalue.csv")
+colnames(wordvalue) <- c("word","mood1","mood2","era","tempo1","tempo2","tempo3","artistorigin1","artistorigin2","genre1","genre2","genre3","grouptype1","grouptype2","count")
+#add z scores and count for each word
+wordvalue[,16:19] <- corectv5tes[,3:6]
+#As.character changed numbers in title so they are unsearchable
+num <- grep("X", wordvalue$word)
+#Remove them
+test <- wordvalue[-rnum,]
+#write.table(top5meta, "formattedtop5meta.csv")
+#write.table(wordvalue, "wordvaluemeta.csv")
+write.table(test, "actualraveragewordvalues.csv")
+
 ```
 ##View of data
 
