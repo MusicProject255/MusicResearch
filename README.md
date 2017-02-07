@@ -14,4 +14,7 @@
 5. Finish by compiling 1-4 into a powerpoint and practice presenting.
 
 ## Week Three Goals
-*TBD*
+1. Create graphs to help visualize the change in data
+2. Make a shiny dashboard that lets a user search a specific song and get it's averages
+3. In shiny dashboard include interactive plot
+4. Finish presentation 3 and the final paper
