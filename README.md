@@ -17,4 +17,5 @@
 1. Create graphs to help visualize the change in data
 2. Make a shiny dashboard that lets a user search a specific song and get it's averages
 3. In shiny dashboard include interactive plot
+4. Order github databases and other files by order they were made
 4. Finish presentation 3 and the final paper
