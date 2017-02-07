@@ -1,0 +1,27 @@
+---
+title: "Music Database"
+output: 
+  flexdashboard::flex_dashboard:
+  orientation: rows
+runtime: shiny
+---
+
+```{r setup, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(DT)
+value <- read.table("testwords.csv")
+top5000f <- read.table("fin5000.csv")
+knitr::opts_chunk$set(fig.width = 5, fig.asp = 1/3)
+
+```
+Row
+-------------------------------------
+
+### Word analysis top 5000
+
+```{r}
+ value %>% DT::datatable()
+```
+
+
