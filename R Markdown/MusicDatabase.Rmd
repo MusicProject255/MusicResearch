@@ -477,6 +477,151 @@ highescount <- ggplot(data=gplot, aes(x = counts, y = aveScore, label=word)) +
 #ggsave(filename="highestcount.pdf", plot=highescount)
 
 
+```
+
+##prediction modeling
+```{r}
+data <- read.csv("formattedtop5meta.csv", sep = " ",na.strings = c("NA",""))
+
+
+#creates a new data set containing only the 
+  #information needed
+data2 <- data[1:5000,3:4]
+data2$tempo <- data[1:5000,19]
+data2$tempo <- gsub("s","",as.character(data2$tempo))
+data2$genre <- data[1:5000,25]
+
+#knn modeling cannot handle any NA values
+data2 <- na.omit(data2)
+
+#Randomly selects which songs will be in the sample
+  #and test data sets
+x <- 1:4494
+sampleIND <- sample(x, floor(.8*4494))
+testIND <- x[-sampleIND]
+testIND
+
+
+#creates the sample song data set for the KNN 
+  #model to learn with             
+samplesong <- data2[sampleIND, 1:3]             
+
+#creates the data base of correct genres in the sample
+  #data set
+samplegenre <- data2[sampleIND,4]
+
+#dataset of songs the model well attempt to predict
+  #genres of
+testsong <- data2[testIND,1:3]
+
+#list of correct genres for the test set
+  #used to calculate success
+testgenre <- data2[testIND,4]
+#runs the prediction model and saves 
+  #the results in a dataset
+predict <- knn(train = samplesong, test = testsong, cl = samplegenre, k=20)
+
+#gives the amount of successful attempts
+success <- sum(predict == testgenre)
+success
+
+
+
+
+
+#Randomly selects which songs will be in the sample
+#and test data sets
+x <- 1:4494
+sampleIND <- sample(x, floor(.8*4494))
+testIND <- x[-sampleIND]
+testIND
+
+#creates the sample data set without tempo
+samplesong2 <- data2[sampleIND, 1:2]             
+
+#creates the data base of correct genres in the sample
+#data set
+samplegenre2 <- data2[sampleIND,4]
+
+#creates the test dataset without tempos
+testsong2 <- data2[testIND,1:2]
+
+#list of correct genres for the test set
+#used to calculate success
+testgenre2 <- data2[testIND,4]
+#runs the prediction model and saves 
+#the results in a dataset
+predict2 <- knn(train = samplesong2, test = testsong2, cl = samplegenre2, k=20)
+
+#gives the amount of successful attempts
+success2 <- sum(predict2 == testgenre2)
+success2
+
+
+
+
+
+#Randomly selects which songs will be in the sample
+#and test data sets
+x <- 1:4494
+sampleIND <- sample(x, floor(.8*4494))
+testIND <- x[-sampleIND]
+testIND
+
+#creates the sample song data with only year
+samplesong3 <- data2[sampleIND, 1]             
+
+#creates the data base of correct genres in the sample
+#data set
+samplegenre3 <- data2[sampleIND,4]
+
+#dataset of songs the model well attempt to predict
+#genres of
+testsong3 <- data2[testIND,1]
+
+#list of correct genres for the test set
+#used to calculate success
+testgenre3 <- data2[testIND,4]
+#runs the prediction model and saves 
+#the results in a dataset
+predict3 <- knn(train = samplesong3, test = testsong3, cl = samplegenre3, k=20)
+
+#gives the amount of successful attempts
+success3 <- sum(predict3 == testgenre3)
+success3
+
+
+
+
+
+#Randomly selects which songs will be in the sample
+#and test data sets
+x <- 1:4494
+sampleIND <- sample(x, floor(.8*4494))
+testIND <- x[-sampleIND]
+testIND
+
+#creates the sample song dataset with only score            
+samplesong4 <- data2[sampleIND, 2]             
+
+#creates the data base of correct genres in the sample
+#data set
+samplegenre4 <- data2[sampleIND,4]
+
+#dataset of songs the model well attempt to predict
+  # with only score
+testsong4 <- data2[testIND,2]
+
+#list of correct genres for the test set
+#used to calculate success
+testgenre4 <- data2[testIND,4]
+#runs the prediction model and saves 
+#the results in a dataset
+predict4 <- knn(train = samplesong4, test = testsong4, cl = samplegenre4, k=20)
+
+#gives the amount of successful attempts
+success4 <- sum(predict4 == testgenre4)
+success4
 
 
 
