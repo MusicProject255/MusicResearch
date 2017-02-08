@@ -1,5 +1,12 @@
 # MusicResearch
 
+##Data
+Our group used data from tsort.info which contained charts from the 1900's to 2016. 
+
+
+
+
+
 ## Week Two Goals
 1. Find 3-5 suitable databases and clean them
 2. Solidify our goal
@@ -19,3 +26,7 @@
 3. In shiny dashboard include interactive plot
 4. Order github databases and other files by order they were made
 4. Finish presentation 3 and the final paper
+
+##Sources
+Main data came from http://tsort.info/
+Meta data was from http://www.gracenote.com/
