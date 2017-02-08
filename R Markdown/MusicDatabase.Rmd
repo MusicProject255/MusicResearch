@@ -391,6 +391,59 @@ head(hereiswordv)
 ```
 
 
+
+## Looking at some plots
+```{r}
+library(ggplot2)
+library(RColorBrewer)
+
+# This function takes a genre, then shows a segmented bar chart, with decade on the x-axis, 
+# and different moods as the segments. I use it in the Shiny app.
+countsOf <- function(genre = "All") {
+  data <- top5000f
+  if (genre != "All") data <- filter(data, genre1 == genre)
+  
+  ggplot(data) +
+    geom_bar(aes(x = as.character(decade), fill = mood1, colour = "black")) +
+    guides(colour = FALSE, fill = guide_legend(title = NULL)) +
+    labs(list(y = "Count", x = "Decade", title = paste("Moods of", genre, "Songs Through the Years"))) +
+    theme(plot.title = element_text(hjust = 0.5))
+}
+
+# This is the other function I use in the Shiny app.
+# It takes a genre and a mood (or "All") and produces a scatterplot of score versus year,
+# with some contours shown for particularly dense places on the plot
+plotScores <- function(genre = "All", mood = "All") {
+  data <- top5000f
+  if (genre != "All") data <- filter(data, genre1 == genre)
+  if (mood != "All") data <- filter(data, mood1 == mood)
+  
+  data %>% ggplot(aes(year, finalscore, xmin = 1900, xmax = 2016, ymin = 0, ymax = 40), na.rm = TRUE) +
+    geom_point() + 
+    stat_density2d(aes(fill = ..level..), geom = "polygon", alpha = 0.3) +
+    labs(list(y = "Score", x = "Year", title = paste(genre, "Songs with", mood, "Moods"))) +
+    theme(plot.title = element_text(hjust = 0.5))
+  
+}
+
+# This big block of code makes six bar charts (for the six most common genres)
+# with decade on the x-axis and colored segments for mood
+top5000f %>% filter(genre1 != "Classical" & 
+                      genre1 != "Other" & 
+                      genre1 != "Soundtrack" & 
+                      genre1 != "Traditional" &
+                      !is.na(genre1)) %>% 
+  ggplot() +
+  geom_bar(aes(x = as.character(decade), fill = mood1, colour = "black")) +
+  scale_fill_manual(values = colorRampPalette(brewer.pal(12, "Paired"))(30)) +
+  guides(colour = FALSE, fill = guide_legend(title = NULL)) +
+  facet_wrap(~as.factor(genre1)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(y = "Count", x = "Decade")
+
+
+```
+
 ## End goals
 ```{r}
 write.table(goodOnes, "topaverages.csv")
