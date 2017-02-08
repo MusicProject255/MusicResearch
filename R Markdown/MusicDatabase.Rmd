@@ -16,6 +16,7 @@ library(stringr)
 allsongs <- read.csv("tsort-chart-2-6-0013.csv")
 #nsongs <- allsongs[,1:2]
 rsongs <- allsongs[,1:3]
+#Split data into just songs and albums
 justsongs<- rsongs[(rsongs$type=="song"),]
 justalbums <- rsongs[(rsongs$type=="album"),]
 #Set as characters
@@ -76,6 +77,7 @@ write.table(gmdfa, file = "albumvalues.csv")
 top5 <- as.character(top5000$name)
 top5 <- tolower(top5)
 top5 <- str_extract_all(csongs, boundary("word"))
+#get the word count of top 5000
 wordcount <- function(list){
   words <<- list()
   dtf <<- data.frame()
@@ -109,6 +111,7 @@ colnames(corectv5[3:6]) <- c("U.S","Eng","Eur","Row")
 score <- 0
 mean <- 0
 #Replaced the columns each time
+#Get the average score per word
 for (x in 1:3452){
   #doesn't return duplicates
   wappear <- grep(corectv5tes$word[[x]], withztes$name)
@@ -130,6 +133,7 @@ write.table(corectv5help,"5000popularitywords.csv")
 
 
 #Didn't work out for meta data
+#Ignore
 dat <-  readLines("metadata5000e.txt")
 dats <- str_split(dat, ':')
 #9,22/28, 71/74/77, 83
@@ -212,6 +216,7 @@ wordlistv <- lapply(wlist, wordstatr)
 #backup <- wordv
 #wordv <- backup
 wordvalue <- backup
+backup <- test
 #Get the rest of information
 rplace <- 0
 getrest <- function(word,y){
@@ -246,8 +251,9 @@ getrest <- function(word,y){
     wordvalue[rplace,(ncol(wordvalue))] <<- top
   }
 }
-#getrest("christmas", 15)
-#For this I manually put in the columns because the function didn't work as planed
+
+#For this I manually put in the columns because the function didn't work as planed, I set y as the rows
+#I want then format it as a dataframe and appen
 cat <- lapply(wlist, getrest, y = 29)
 #Put it as a dataframe to append to wordvalue
 temp <- as.data.frame(do.call("rbind", cat), stringsAsFactors = FALSE)
@@ -264,6 +270,8 @@ test <- wordvalue[-rnum,]
 #write.table(top5meta, "formattedtop5meta.csv")
 #write.table(wordvalue, "wordvaluemeta.csv")
 write.table(test, "actualraveragewordvalues.csv")
+#Final dataframe
+write.table(top5meta, "fin5000.csv")
 
 ```
 ##View of data
@@ -277,5 +285,45 @@ corectv5right <- read.csv("5000popularitywords.csv")
 head(corectv5right)
 hereiswordv <- read.csv("wordvalue.csv")
 head(hereiswordv)
+
+
+```
+
+
+## End goals
+```{r}
+write.table(goodOnes, "topaverages.csv")
+second <- read.csv("6-songWordCounts.csv")
+#graphing doesn't make sense
+#ggplot(data = test, aes(x = mood1, y = U.S))+
+  #geom_point()
+#make a shiny that displays average word info
+
+#The one hit wonders
+library(ggrepel)
+newdata <- doggo[order(-doggo$aveScore),]
+gdata <- newdata[1:25,]
+onehit <- ggplot(data = gdata, aes(x = counts, y = aveScore, label = word))+
+  geom_text_repel(size=2)+
+  labs(title="Words that appear few times, but have a high score")
+#ggsave(filename="onehit.pdf", plot=onehit)
+#Highest average over 20
+goodone <- read.table("topaverages.csv")
+ngdata <- goodone[order(-goodone$aveScore),]
+ngdat <- ngdata[1:25,]
+over20 <- ggplot(data= ngdat, aes(x = counts, y = aveScore, label = word))+
+  geom_text_repel(size=2)+
+  labs(title="Highest scoring words with 20 or more counts")
+#ggsave(filename="over20.pdf", plot=over20)
+#Highest counts
+gplot <- goodone[1:25,]
+highescount <- ggplot(data=gplot, aes(x = counts, y = aveScore, label=word)) +
+  geom_text_repel(size=2)+
+  labs(title="Words that appear the most")
+#ggsave(filename="highestcount.pdf", plot=highescount)
+
+
+
+
 
 ```
