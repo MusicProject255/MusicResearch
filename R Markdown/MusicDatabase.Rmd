@@ -14,7 +14,7 @@ Note: The first time a package is used, we provide URLs (commented) to some docu
 ##Code used to get data
 ```{r eval=FALSE}
 library(stringr)
-### Some documentation for stringr:
+#### Some documentation for stringr:
 ##  https://cran.r-project.org/web/packages/stringr/index.html
 ##  https://cran.r-project.org/web/packages/stringr/stringr.pdf
 #Get dataset and look at name and title
