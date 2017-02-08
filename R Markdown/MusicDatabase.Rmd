@@ -8,10 +8,15 @@ output: html_document
   
 In our group our main focus is to determine what genre is the most popular in each decade starting with 1900 and going up to 2016. We also are going to look at which genres are more popular in eruope compared to the U.S and if the words in a song title have a effect on how popular a song is. We are going to use music brainz to get the genre of a song, it's mood quality, and tempo. With this information we will be able to see the trends better in preffered music choice for each decade. In the end we may use the database to make a simple song finder based on your taste in genre, tempo, and mood.
 
+Note: The first time a package is used, we provide URLs (commented) to some documentation for that package.
+
 
 ##Code used to get data
 ```{r eval=FALSE}
 library(stringr)
+### Some documentation for stringr:
+##  https://cran.r-project.org/web/packages/stringr/index.html
+##  https://cran.r-project.org/web/packages/stringr/stringr.pdf
 #Get dataset and look at name and title
 allsongs <- read.csv("tsort-chart-2-6-0013.csv")
 #nsongs <- allsongs[,1:2]
@@ -156,8 +161,14 @@ nextes <- nob[[1]]
 ##Reading json Gracenote metadata as a table, cleaning it up
 ```{r eval=FALSE}
 library(jsonlite)
+##  https://cran.r-project.org/web/packages/jsonlite/index.html
+##  https://cran.r-project.org/web/packages/jsonlite/jsonlite.pdf
 library(dplyr)
+##  https://cran.r-project.org/web/packages/dplyr/index.html
+##  https://cran.r-project.org/web/packages/dplyr/dplyr.pdf
 library(tidyr)
+##  https://cran.r-project.org/web/packages/tidyr/index.html
+##  https://cran.r-project.org/web/packages/tidyr/tidyr.pdf
 
 
 json = fromJSON(paste("[",paste(
@@ -318,7 +329,7 @@ getrest <- function(word,y){
   }
 }
 
-#For this I manually put in the columns because the function didn't work as planed, I set y as the rows
+#For this I manually put in the columns because the function didn't work as planned, I set y as the rows
 #I want then format it as a dataframe and appen
 cat <- lapply(wlist, getrest, y = 29)
 #Put it as a dataframe to append to wordvalue
