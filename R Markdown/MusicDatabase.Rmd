@@ -103,6 +103,20 @@ gmdf <- t(mdf)
 colnames(gmdf) <- c("Instances")
 write.table(gmdf, file = "songvalues5000.csv")
 
+# Take numeric vector, spit out z-scores
+# Use this to compare US score to Europe score (for example), since they have different ranges
+zscores <- function(numData) {
+  m <- mean(numData, na.rm = TRUE)
+  sd <- sd(numData, na.rm = TRUE)
+  z <- (numData - m)/sd
+  return(z)
+}
+
+# Add z-scores to the data
+top5000$z_usa <- zscores(top5000$raw_usa)
+top5000$z_eng <- zscores(top5000$raw_eng)
+top5000$z_eur <- zscores(top5000$raw_eur)
+top5000$z_row <- zscores(top5000$raw_row)
 
 #Search through 5000 for words and get their values
 corectv5tes$word <- as.character(corectv5tes$word)
