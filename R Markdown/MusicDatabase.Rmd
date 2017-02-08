@@ -153,6 +153,72 @@ nextes <- nob[[1]]
 
 ```
 
+##Reading json Gracenote metadata as a table, cleaning it up
+```{r eval=FALSE}
+library(jsonlite)
+library(dplyr)
+library(tidyr)
+
+
+json = fromJSON(paste("[",paste(
+  readLines("https://raw.githubusercontent.com/MusicProject255/MusicResearch/master/Databases/meta.json"),
+  collapse=","),"]"))
+
+gracenote <- data.frame(json)
+
+# Looking at the data, we have some nested data frames
+
+gn <- flatten(gracenote)
+tbl_df(gn)
+# The 'tracks' column is still a list, but we don't need it, so...
+gn <- gn %>% select(-tracks)
+# We just take it out. Now we can write to csv.
+write.csv(gn, "gnMetadata5000.csv")
+```
+
+##Merging Datasets
+```{r eval=FALSE}
+library(dplyr)
+library(tidyr)
+
+# Read in the old tsort data
+top5000 <- read.csv("top5000.csv")
+
+# Read in the new Gracenote metadata (still messy)
+gnUnclean <- read.csv("gnMetadata5000.csv")
+
+# Check it out.
+tbl_df(gnUnclean)
+View(gnUnclean)
+
+# There are several columns containing urls (album art, album review). Drop those.
+# There are also a bunch of ID columns (an index for different tempi, genres, etc.).
+# IDs are probably useful for Gracenote, but I think we'll stick with English words. Drop those.
+# Drop columns of NAs, and other stuff that just doesn't make any sense.
+uselessCols <- c("album_art_url", "artist_bio_url", "radio_id", "track_artist_name", "artist_image_url",
+                 "album_gnid", "xid", "review_url", "mood.1.ID", "mood.2.ID", "artist_era.1.ID",
+                 "artist_era.2.ID", "tempo.1.ID", "tempo.2.ID", "tempo.3.ID", "artist_origin.1.ID",
+                 "artist_origin.2.ID", "artist_origin.3.ID", "artist_origin.4.ID", "genre.1.ID",
+                 "genre.2.ID", "genre.3.ID", "artist_type.1.ID", "artist_type.2.ID", "track_gnid")
+
+# A warning message should pop up if I got any of the column names wrong
+gnCleaner <- select(gnUnclean, -one_of(uselessCols))
+tbl_df(gnCleaner)
+
+# Nice!
+# There's a bit more cleaning that I could do, but I want to go ahead and merge this with
+# the tsort data, so my groupmates can start playing with it.
+
+# Now merge the datasets
+top5000plus <- bind_cols(top5000, gnCleaner)
+tbl_df(top5000plus)
+
+# and write to CSVs
+write.csv(top5000plus, "top5000plus.csv")
+write.csv(gnCleaner, "gnCleaner.csv")
+
+```
+
 ##Formating metadata
 ```{r eval=FALSE}
 library(stringr)
