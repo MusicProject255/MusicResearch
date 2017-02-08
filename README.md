@@ -1,12 +1,12 @@
 # MusicResearch
-
 ##Data
-Our group used data from tsort.info which contained charts from the 1900's to 2016. 
+This GitHub repository contains data from tsort.info, which catalogues music scores by populairty form 1900 to 2016. All of our group's work with this data, from gathering to analysis and visualization, has been included in some form. In addition, our presentations are included in their respective folder. You can find our shiny programs in the "musicDataApp" folder, and the python scripts for aggregating and exporting data are contained in "PythonProgramForMetadeta." In order to run most of the programs, you will need to download our data in the various formats found in the "Databases" folder. Please note that some filenames have been changed to keep things organized and might be slightly different from the scrips that need them.
 
+##Sources
+Main data downloaded from http://tsort.info/
+Metadata collected from http://www.gracenote.com/
 
-
-
-
+# Goals
 ## Week Two Goals
 1. Find 3-5 suitable databases and clean them
 2. Solidify our goal
@@ -26,7 +26,3 @@ Our group used data from tsort.info which contained charts from the 1900's to 20
 3. In shiny dashboard include interactive plot
 4. Order github databases and other files by order they were made
 4. Finish presentation 3 and the final paper
-
-##Sources
-Main data came from http://tsort.info/
-Meta data was from http://www.gracenote.com/
