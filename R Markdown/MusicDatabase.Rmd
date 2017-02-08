@@ -18,7 +18,7 @@ library(stringr)
 ##  https://cran.r-project.org/web/packages/stringr/index.html
 ##  https://cran.r-project.org/web/packages/stringr/stringr.pdf
 #Get dataset and look at name and title
-allsongs <- read.csv("tsort-chart-2-6-0013.csv")
+allsongs <- read.csv("1-tsort-chart-2-6-0013.csv")
 #nsongs <- allsongs[,1:2]
 rsongs <- allsongs[,1:3]
 #Split data into just songs and albums
@@ -37,11 +37,12 @@ calbums <- str_extract_all(calbums, boundary("word"))
 #Empty list for words
 words <- list()
 #Function looks at song titles, splits them up into words, adds them to a list and keeps track of number 
-dtf <- data.frame()
 for (x in 1:length(csongs)){
   title <- csongs[[x]]
+  #Iterate through title
   for (y in 1:length(title)){
     word <- title[[y]]
+    #check if the word is in the list and gives it a count value
     if(exists(word, words)){
       words[[word]] <- words[[word]] + 1
     }else{
@@ -49,41 +50,46 @@ for (x in 1:length(csongs)){
     }
   }
 }
-worda <- list()
+#Didn't do analysis on this one, so not important
+#worda <- list()
 #Function looks at song titles, splits them up into words, adds them to a list and keeps track of number
-top5 <- as.character(top5000$name)
+#top5 <- as.character(top5000$name)
 #Make sure song names are in correct format
-top5 <- tolower(top5)
-top5 <- str_extract_all(csongs, boundary("word"))
-dtfa <- data.frame()
-for (b in 1:length(calbums)){
-  titlea <- calbums[[b]]
-  for (c in 1:length(titlea)){
-    aword <- titlea[[c]]
-    if(exists(aword, worda)){
-      worda[[aword]] <- worda[[aword]] + 1
-    }else{
-      worda[[aword]] <- 1
-    }
-  }
-}
+#top5 <- tolower(top5)
+#top5 <- str_extract_all(csongs, boundary("word"))
+#dtfa <- data.frame()
+#for (b in 1:length(calbums)){
+#  titlea <- calbums[[b]]
+#  for (c in 1:length(titlea)){
+#    aword <- titlea[[c]]
+#    if(exists(aword, worda)){
+#      worda[[aword]] <- worda[[aword]] + 1
+#    }else{
+#      worda[[aword]] <- 1
+#    }
+#  }
+#}
+
 
 #Formatting Data and saving
 mdf <- as.data.frame(words)
 gmdf <- t(mdf)
 colnames(gmdf) <- c("Instances")
 write.table(gmdf, file = "songvalues.csv")
+#didn't use
 #formatting album data
-mdfa <- as.data.frame(worda)
-gmdfa <- t(mdfa)
-colnames(gmdfa) <- c("Instances")
-write.table(gmdfa, file = "albumvalues.csv")
+#mdfa <- as.data.frame(worda)
+#gmdfa <- t(mdfa)
+#colnames(gmdfa) <- c("Instances")
+#write.table(gmdfa, file = "albumvalues.csv")
 
+top5 <- read.csv("2-top5000songs-2-6-0013.csv")
 top5 <- as.character(top5000$name)
 top5 <- tolower(top5)
 top5 <- str_extract_all(csongs, boundary("word"))
 #get the word count of top 5000
 wordcount <- function(list){
+  #Did two << to save as a global variable, to track progress
   words <<- list()
   dtf <<- data.frame()
   for (x in 1:length(list)){
@@ -98,10 +104,12 @@ wordcount <- function(list){
   }
   }
 }
+#Did the same thing as word coutns for big dataframe
 mdf <- as.data.frame(words)
-gmdf <- t(mdf)
-colnames(gmdf) <- c("Instances")
-write.table(gmdf, file = "songvalues5000.csv")
+gmdf5 <- t(mdf)
+colnames(gmdf5) <- c("Instances")
+write.table(gmdf5, file = "songvalues5000.csv")
+
 
 # Take numeric vector, spit out z-scores
 # Use this to compare US score to Europe score (for example), since they have different ranges
@@ -112,13 +120,15 @@ zscores <- function(numData) {
   return(z)
 }
 
+withztes <- read.csv("2-top5000songs-2-6-0013.csv")
 # Add z-scores to the data
-top5000$z_usa <- zscores(top5000$raw_usa)
-top5000$z_eng <- zscores(top5000$raw_eng)
-top5000$z_eur <- zscores(top5000$raw_eur)
-top5000$z_row <- zscores(top5000$raw_row)
+withztes$z_usa <- zscores(top5000$raw_usa)
+withztes$z_eng <- zscores(top5000$raw_eng)
+withztes$z_eur <- zscores(top5000$raw_eur)
+withztes$z_row <- zscores(top5000$raw_row)
 
-#Search through 5000 for words and get their values
+corectv5tes <- gmdf5
+#Search through 5000 for words and get their values, make sure correct format
 corectv5tes$word <- as.character(corectv5tes$word)
 withztes$name <- as.character(withztes$name)
 corectv5tes$word <- str_extract_all(corectv5tes$word, boundary("word"))
@@ -126,7 +136,7 @@ withztes$name <- tolower(withztes$name)
 corectv5tes$word <- str_extract_all(corectv5tes$word, boundary("word"))
 
 
-colnames(corectv5[3:6]) <- c("U.S","Eng","Eur","Row")
+#colnames(corectv5[3:6]) <- c("U.S","Eng","Eur","Row")
 score <- 0
 mean <- 0
 #Replaced the columns each time
@@ -153,22 +163,22 @@ write.table(corectv5help,"5000popularitywords.csv")
 
 #Didn't work out for meta data
 #Ignore
-dat <-  readLines("metadata5000e.txt")
-dats <- str_split(dat, ':')
+#dat <-  readLines("metadata5000e.txt")
+#dats <- str_split(dat, ':')
 #9,22/28, 71/74/77, 83
 #Mood, Tempo, Stlye, Male or Female
-datsq <- lapply(dats, noquote)
+#datsq <- lapply(dats, noquote)
 #datsqe <- str_extract_all(datsq, boundary("word"))
 #tese <- unlist(datsq)
 #sapply(datsq[[7]], grepl, "mood")
-datsq[[1]] <- NULL
+#datsq[[1]] <- NULL
 #tester <- datsq[[1]]
-emptyl <- list()
-nob <- list()
-for(x in 1:length(datsq)){
-  nob[[x]] <- gsub("\\{|\\}", "", datsq[[x]])
-}
-nextes <- nob[[1]]
+#emptyl <- list()
+#nob <- list()
+#for(x in 1:length(datsq)){
+#  nob[[x]] <- gsub("\\{|\\}", "", datsq[[x]])
+#}
+#nextes <- nob[[1]]
 
 ```
 
@@ -258,25 +268,25 @@ top5meta$tempo1 <- gsub(" Tempo", "" ,top5meta$tempo1)
 
 #gets genre, mood, tempo, artist
 #Not right
-wordstat <- function(word){
-  wholewordinfo <<- data.frame()
-  formt <- str_extract_all(tolower(top5meta$name), boundary("word"))
-  wordloc <- grep(word, formt)
-  for(x in wordloc){
-    wholewordinfo[x,1] <<- word
-    wholewordinfo[x,2] <<- top5meta$genre1[x]
-    wholewordinfo[x,3] <<- top5meta$genreSpec[x]
-    wholewordinfo[x,4] <<- top5meta$genre2[x]
-    wholewordinfo[x,5] <<- top5meta$mood1[x]
-    wholewordinfo[x,6] <<- top5meta$mood2[x]
-    wholewordinfo[x,7] <<- top5meta$tempo1[x]
-    wholewordinfo[x,8] <<- top5meta$exacttempo[x]
-    wholewordinfo[x,9] <<- top5meta$tempo2[x]
-    wholewordinfo[x,10] <<- top5meta$artisttype1[x]
-    wholewordinfo[x,11] <<- top5meta$artistera1[x] 
-  }
+#wordstat <- function(word){
+#  wholewordinfo <<- data.frame()
+#  formt <- str_extract_all(tolower(top5meta$name), boundary("word"))
+#  wordloc <- grep(word, formt)
+#  for(x in wordloc){
+#    wholewordinfo[x,1] <<- word
+#    wholewordinfo[x,2] <<- top5meta$genre1[x]
+#    wholewordinfo[x,3] <<- top5meta$genreSpec[x]
+#    wholewordinfo[x,4] <<- top5meta$genre2[x]
+#    wholewordinfo[x,5] <<- top5meta$mood1[x]
+#    wholewordinfo[x,6] <<- top5meta$mood2[x]
+#    wholewordinfo[x,7] <<- top5meta$tempo1[x]
+#    wholewordinfo[x,8] <<- top5meta$exacttempo[x]
+#    wholewordinfo[x,9] <<- top5meta$tempo2[x]
+#    wholewordinfo[x,10] <<- top5meta$artisttype1[x]
+#    wholewordinfo[x,11] <<- top5meta$artistera1[x] 
+#  }
   
-}
+#}
 #Gets the first column, next function (kinda) does the rest
 wordvalue <- data.frame() 
 wordstatr <- function(word){
